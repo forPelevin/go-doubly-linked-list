@@ -4,113 +4,74 @@ import (
 	"testing"
 )
 
-func TestDoublyLinkedList(t *testing.T) {
-	// Initialize a new doubly linked list
+func TestDoublyLinkedList_PushFront(t *testing.T) {
 	dll := DoublyLinkedList{}
-
-	// Push a new item at the beginning of the list.
+	val := 1
 	dll.PushFront(1)
+	if val != dll.First().Value() {
+		t.Errorf("expected that the first item has value %d, but he has %+v\n", val, dll.First().Value())
+	}
+}
 
-	// The new item should be the first and the last node.
-	firstItem := dll.First()
-	lastItem := dll.Last()
-	if firstItem == nil || lastItem == nil || firstItem.Value() != lastItem.Value() {
-		t.Errorf(
-			"expected that the first and last item are same, but they aren't,\n%+v\n%+v",
-			firstItem,
-			lastItem,
-		)
+func TestDoublyLinkedList_PushLast(t *testing.T) {
+	dll := DoublyLinkedList{}
+	val := 1
+	dll.PushLast(1)
+	if val != dll.Last().Value() {
+		t.Errorf("expected that the last item has value %d, but he has %+v\n", val, dll.Last().Value())
+	}
+}
+
+func TestDoublyLinkedList_Len(t *testing.T) {
+	dll := DoublyLinkedList{}
+	dll.PushFront(1)
+	dll.PushFront(1)
+	dll.PushLast(1)
+	dll.PushLast(1)
+	if dll.Len() != 4 {
+		t.Errorf("expected that the list len is 4, %+v\n", dll)
+	}
+}
+
+func TestDoublyLinkedList_First(t *testing.T) {
+	dll := DoublyLinkedList{}
+	val := 1
+	dll.PushFront(1)
+	if val != dll.First().Value() {
+		t.Errorf("expected that the first item has value %d, but he has %+v\n", val, dll.First().Value())
 		return
 	}
 
-	// And the list length must be 1
-	if dll.Len() != 1 {
-		t.Errorf("expected that the list len is 1, %+v\n", dll)
+	dll.First().Remove()
+	if dll.First() != nil {
+		t.Errorf("expected that the first item is nil, but it is %v", dll.First())
+		return
+	}
+}
+
+func TestDoublyLinkedList_Last(t *testing.T) {
+	dll := DoublyLinkedList{}
+	val := 1
+	dll.PushLast(1)
+	if val != dll.Last().Value() {
+		t.Errorf("expected that the last item has value %d, but he has %+v\n", val, dll.Last().Value())
 		return
 	}
 
-	// Push a new item at the beginning again.
-	val2 := 2
-	dll.PushFront(2)
-
-	// Now the new item must be first.
-	if val2 != dll.First().Value() {
-		t.Errorf("expected that the first item has value %d, but he has %+v\n", val2, dll.First().Value())
-		return
-	}
-
-	// And the last item must point to the new item as prev,
-	if dll.Last().Prev() != dll.First() {
-		t.Errorf("expected that the last item prev is the new item %+v, but got %+v\n", val2, dll.First().Value())
-		return
-	}
-
-	// but still has next as nil.
-	if dll.Last().Next() != nil {
-		t.Errorf("expected that the last item next is nil, but got %+v\n", dll.Last().Next())
-		return
-	}
-
-	// Push a new item at the end of the list.
-	val3 := 3
-	dll.PushLast(val3)
-
-	// The new item must be the last.
-	if val3 != dll.Last().Value() {
-		t.Errorf("expected that the last item has value %d, but he has %+v\n", val3, dll.Last().Value())
-		return
-	}
-
-	// And the list length should be 3.
-	if dll.Len() != 3 {
-		t.Errorf("expected that the list len is 3, %+v\n", dll)
-		return
-	}
-
-	// Remove the last and middle items.
 	dll.Last().Remove()
-	dll.Last().Remove()
-
-	// The list len must be 1.
-	if dll.Len() != 1 {
-		t.Errorf("expected that the list len is 1, %+v\n", dll)
+	if dll.Last() != nil {
+		t.Errorf("expected that the last item is nil, but it is %v", dll.Last())
 		return
 	}
+}
 
-	// The list first and last items must be one item.
-	if dll.First() != dll.Last() {
-		t.Errorf(
-			"expected that the first and last item are same, but they aren't,\n%+v\n%+v",
-			dll.First(),
-			dll.Last(),
-		)
-		return
-	}
+func TestItem_Remove(t *testing.T) {
+	dll := DoublyLinkedList{}
+	dll.PushFront(1)
+	dll.First().Remove()
 
-	// The remaining must have empty prev and last pointers.
-	remainingItem := dll.First()
-	if remainingItem.next != nil || remainingItem.prev != nil {
-		t.Errorf("expected that the remaining item has nil prev and next pointers, but got %+v\n", remainingItem)
-		return
-	}
-
-	// Delete the remaining item.
-	remainingItem.Remove()
-
-	// The list len must be 0.
-	if dll.Len() != 0 {
-		t.Errorf("expected that the list len is 0, %+v\n", dll)
-		return
-	}
-
-	// The list first and last items must be nils.
-	if dll.First() != nil || dll.Last() != nil {
-		t.Errorf(
-			"expected that the first and last item are nils, but they aren't,\n%+v\n%+v",
-			dll.First(),
-			dll.Last(),
-		)
-		return
+	if dll.Len() > 0 {
+		t.Errorf("expected that the list is empty and an item was removed, %+v\n", dll)
 	}
 }
 
